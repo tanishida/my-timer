@@ -60,6 +60,9 @@ export const Timer: FC<Props> = (props) => {
   
   return (
     <ThemedView>
+      {!isFinishAlert1 ? <ThemedText style={styles.alertTextContent}>アラート1 : {timeLimit - alert1}分</ThemedText> : null}
+      {!isFinishAlert2 ? <ThemedText style={styles.alertTextContent}>アラート2 : {timeLimit - alert2}分</ThemedText> : null}
+      <ThemedView style={{marginTop: 10}} />
       <ThemedText style={styles.munitesTextContent}>{minutes}分</ThemedText>
       <ThemedText style={styles.secondTextContent}>{seconds}秒</ThemedText>
       <ThemedView style={{marginTop: 50}} />
@@ -131,14 +134,19 @@ export const Timer: FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
+    alertTextContent: {
+      textAlign: "center",
+      fontSize: 20,
+      lineHeight: 30,
+    },
     munitesTextContent: {
       textAlign: "center",
       fontSize: 100,
       lineHeight: 110,
     },
     secondTextContent: {
-        textAlign: "center",
-        fontSize: 50,
-        lineHeight: 60,
-      },
+      textAlign: "center",
+      fontSize: 50,
+      lineHeight: 60,
+    },
 });
