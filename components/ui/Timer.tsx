@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { Button, Dialog } from '@rneui/themed';
+import { Button, Dialog, Chip } from '@rneui/themed';
 import { ThemedView } from '@/components/ThemedView';
 import { useTimer } from 'react-timer-hook';
 import { ThemedText } from '@/components/ThemedText';
@@ -14,10 +14,11 @@ type Props = {
     alert2: number;
     audio1: Audio.Sound | null;
     audio2: Audio.Sound | null;
+    finishAudio: Audio.Sound | null;
 }
 
 export const Timer: FC<Props> = (props) => {
-  const { setIsStarted, timeLimit, alert1, alert2, audio1, audio2 } = props;
+  const { setIsStarted, timeLimit, alert1, alert2, audio1, audio2, finishAudio } = props;
   const [isFinishAlert1, setFinishAlert1] = useState(false);
   const [isFinishAlert2, setFinishAlert2] = useState(false);
 
@@ -33,15 +34,19 @@ export const Timer: FC<Props> = (props) => {
   const stopSound2 = async () => {
     await audio2?.stopAsync();
   }
+  const playFinishSound = async () => {
+    await finishAudio?.playAsync();
+  }
+  const stopFinishSound = async () => {
+    await finishAudio?.stopAsync();
+  }
 
   const [finishedDialogVisible, setFinishedDialogVisible] = useState(false);
-  const [restertedDialogVisible, setRestartedDialogVisible] = useState(false);
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + (timeLimit * 60));
   const {
     resume,
     pause,
-    restart,
     seconds,
     minutes,
     isRunning,
@@ -56,12 +61,45 @@ export const Timer: FC<Props> = (props) => {
         playSound2();
         setFinishAlert2(true);
     }
-  }, [timeLimit, minutes, alert1, alert2]);
+    if (minutes === 0 && seconds === 0 && !isRunning) {
+        playFinishSound();
+        setFinishAlert1(false);
+        setFinishAlert2(false);
+    }
+        
+  }, [timeLimit, minutes, seconds, alert1, alert2]);
   
   return (
     <ThemedView>
-      {!isFinishAlert1 ? <ThemedText style={styles.alertTextContent}>アラート1 : {timeLimit - alert1}分</ThemedText> : null}
-      {!isFinishAlert2 ? <ThemedText style={styles.alertTextContent}>アラート2 : {timeLimit - alert2}分</ThemedText> : null}
+      {alert1 > 0 ? 
+        <ThemedView style={{ alignItems: 'center' }}>
+          <Chip 
+            icon={{
+              name: isFinishAlert1 ? 'check-circle' : 'circle',
+              type: 'font-awesome',
+              size: 20,
+              color: isFinishAlert1 ? '' : 'white',
+            }}
+            disabled={isFinishAlert1}
+            color="#ff7f50" 
+            title={`アラート1 : ${timeLimit - alert1}分`} 
+          />
+        </ThemedView> : null}
+      {alert2 > 0 ?        
+        <ThemedView style={{ alignItems: 'center' }}>
+          <Chip 
+              icon={{
+               name: isFinishAlert2 ? 'check-circle' : 'circle',
+               type: 'font-awesome',
+               size: 20,
+               color: isFinishAlert2 ? '' : 'white',
+             }}
+             disabled={isFinishAlert2}
+             color="#ff0000" 
+             title={`アラート2 : ${timeLimit - alert2}分`} 
+             containerStyle={{ marginVertical: 15 }}
+           />
+        </ThemedView> : null}
       <ThemedView style={{marginTop: 10}} />
       <ThemedText style={styles.munitesTextContent}>{minutes}分</ThemedText>
       <ThemedText style={styles.secondTextContent}>{seconds}秒</ThemedText>
@@ -83,14 +121,6 @@ export const Timer: FC<Props> = (props) => {
       <Collapsible title="操作メニュー" >
         <Button style={{marginBottom: 5}} disabled={isRunning || (seconds + minutes) === 0} onPress={resume}>スタート</Button>
         <Button style={{marginBottom: 5}} disabled={!isRunning || (seconds + minutes) === 0} onPress={pause}>ストップ</Button>
-        <Button 
-          color="warning"
-          onPress={() => {
-            setRestartedDialogVisible(true);
-          }}
-        >
-          再スタート
-        </Button>
         </Collapsible>
       </ThemedView>
 
@@ -105,27 +135,11 @@ export const Timer: FC<Props> = (props) => {
           <Dialog.Button title="はい" onPress={() => {
             stopSound1();
             stopSound2();
+            stopFinishSound();
             setFinishedDialogVisible(false);
             setIsStarted(false);
-          }}/>
-        </Dialog.Actions>
-      </Dialog>
-
-      <Dialog
-        isVisible={restertedDialogVisible}
-        onBackdropPress={() => setRestartedDialogVisible(false)}
-      >
-        <Dialog.Title title="タイマー再スタート"/>
-        <Text>{`残り時間${minutes}分${seconds}秒`}</Text>
-        <Text>{`${timeLimit}分タイマーを再スタートしますか？`}</Text>
-        <Dialog.Actions>
-          <Dialog.Button title="はい" onPress={() => {
-            setRestartedDialogVisible(false);
-            const time = new Date();
-            time.setSeconds(time.getSeconds() + (timeLimit * 60));
-            restart(time);
-            stopSound1();
-            stopSound2();
+            setFinishAlert1(false);
+            setFinishAlert2(false);
           }}/>
         </Dialog.Actions>
       </Dialog>

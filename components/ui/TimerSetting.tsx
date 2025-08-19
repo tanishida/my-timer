@@ -13,6 +13,7 @@ export const TimerSetting: FC<Props> = (props) => {
   const { setIsStarted, timeLimit, alert1, alert2 } = props;
   const [audio1, setAudio1] = useState<Audio.Sound | null>(null);
   const [audio2, setAudio2] = useState<Audio.Sound | null>(null);
+  const [finishAudio, setFinishAudio] = useState<Audio.Sound | null>(null);
 
   useEffect(() => {
     const initAudio1 = async () => {
@@ -221,11 +222,22 @@ export const TimerSetting: FC<Props> = (props) => {
           console.error("アラート2の初期化中にエラーが発生しました:", error);
         }
       };
+      const initFinishAudio = async () => {
+        let url = require("@/assets/sounds/jingle_21.mp3");
+          try {
+            const { sound } = await Audio.Sound.createAsync(url);
+            setFinishAudio(sound);
+          } catch (error) {
+            console.error("終了アラートの初期化中にエラーが発生しました:", error);
+          }
+        };
       initAudio1();
       initAudio2();
+      initFinishAudio();
     return () => {
       audio1?.unloadAsync();
       audio2?.unloadAsync();
+      finishAudio?.unloadAsync();
     };
   }, []);
   
@@ -238,6 +250,7 @@ export const TimerSetting: FC<Props> = (props) => {
         alert2={alert2}
         audio1={audio1}
         audio2={audio2}
+        finishAudio={finishAudio}
       />
     </>
   );
