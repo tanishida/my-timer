@@ -29,7 +29,7 @@ export default function TabTwoScreen() {
       </Card>
       <ThemedText
         style={{
-          textAlign: "left",
+          textAlign: "right",
           transform: "scaleX(-1) scaleY(-1)",
           fontSize: 20,
         }}
