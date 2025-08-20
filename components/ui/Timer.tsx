@@ -8,6 +8,7 @@ import { Collapsible } from "@/components/Collapsible";
 import { Audio } from "expo-av";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { CircularProgressBase } from 'react-native-circular-progress-indicator';
 
 type Props = {
   setIsStarted: (isStarted: boolean) => void;
@@ -123,24 +124,38 @@ export const Timer: FC<Props> = (props) => {
       ) : null}
       <ThemedView style={{ marginTop: 10 }} />
       <ThemedView>
+      <CircularProgressBase
+        value={minutes}
+        maxValue={timeLimit}
+        activeStrokeColor={'#e84118'}
+        radius={getSize(160)}
+      >
+      <CircularProgressBase
+        value={seconds}
+        maxValue={60}
+        activeStrokeColor={'#badc58'}
+        radius={getSize(150)}
+      >
         <CircularProgress
-          value={seconds}
-          maxValue={60}
+          value={minutes}
+          maxValue={timeLimit}
           radius={getSize(160)}
-          progressValueColor={"#ecf0f1"}
-          title={`${minutes}分`}
+          title={`${seconds}秒`}
           titleColor={color}
           titleStyle={{
-            fontSize: getSize(90),
-            lineHeight: getSize(100),
-            fontWeight: "bold",
-          }}
-          valueSuffix={"秒"}
-          progressValueStyle={{
             fontSize: getSize(50),
             lineHeight: getSize(60),
           }}
+          activeStrokeColor={'#e84118'}
+          valueSuffix={"分"}
+          progressValueColor={color}
+          progressValueStyle={{
+            fontSize: getSize(90),
+            lineHeight: getSize(100),
+          }}
         />
+        </CircularProgressBase>
+      </CircularProgressBase>
       </ThemedView>
       <ThemedView style={{ marginTop: 50 }} />
       <Button
