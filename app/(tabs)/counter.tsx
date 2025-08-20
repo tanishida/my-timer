@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { Card, Button, Text } from "@rneui/themed";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import * as Haptics from "expo-haptics";
 
 export default function TabTwoScreen() {
   const [count, setCount] = useState(0);
@@ -16,20 +17,29 @@ export default function TabTwoScreen() {
         <Button
           title="+"
           color="secondary"
-          onPress={() => setCount(count + 1)}
+          onPress={() => {
+            if (process.env.EXPO_OS === "ios") {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
+            setCount(count + 1);
+          }}
           style={{ marginBottom: 10 }}
           disabled={count >= 20}
         />
         <Button
           title="-"
           color="secondary"
-          onPress={() => setCount(count - 1)}
+          onPress={() => {
+            if (process.env.EXPO_OS === "ios") {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
+            setCount(count - 1);
+          }}
           disabled={count <= 0}
         />
       </Card>
       <ThemedText
         style={{
-          textAlign: "right",
           transform: "scaleX(-1) scaleY(-1)",
           fontSize: 20,
         }}
@@ -44,13 +54,23 @@ export default function TabTwoScreen() {
         </Text>
         <Button
           title="+"
-          onPress={() => setCount2(count2 + 1)}
+          onPress={() => {
+            if (process.env.EXPO_OS === "ios") {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
+            setCount2(count2 + 1);
+          }}
           style={{ marginBottom: 10 }}
           disabled={count2 >= 20}
         />
         <Button
           title="-"
-          onPress={() => setCount2(count2 - 1)}
+          onPress={() => {
+            if (process.env.EXPO_OS === "ios") {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
+            setCount2(count2 - 1);
+          }}
           disabled={count2 <= 0}
         />
       </Card>

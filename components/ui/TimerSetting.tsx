@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import { Audio } from "expo-av";
 import { Timer } from "@/components/ui/Timer";
+import { ScrollView } from "react-native";
 
 type Props = {
   setIsStarted: (isStarted: boolean) => void;
@@ -242,7 +243,7 @@ export const TimerSetting: FC<Props> = (props) => {
   }, []);
 
   return (
-    <>
+    <ScrollView>
       <Timer
         setIsStarted={setIsStarted}
         timeLimit={timeLimit}
@@ -252,6 +253,6 @@ export const TimerSetting: FC<Props> = (props) => {
         audio2={audio2}
         finishAudio={finishAudio}
       />
-    </>
+    </ScrollView>
   );
 };

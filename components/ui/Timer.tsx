@@ -1,11 +1,13 @@
-import React, { FC, useState, useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import React, { FC, useState, useEffect, useCallback } from "react";
+import { StyleSheet, Text, Dimensions } from "react-native";
 import { Button, Dialog, Chip } from "@rneui/themed";
 import { ThemedView } from "@/components/ThemedView";
 import { useTimer } from "react-timer-hook";
 import { ThemedText } from "@/components/ThemedText";
 import { Collapsible } from "@/components/Collapsible";
 import { Audio } from "expo-av";
+import CircularProgress from "react-native-circular-progress-indicator";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 type Props = {
   setIsStarted: (isStarted: boolean) => void;
@@ -29,6 +31,7 @@ export const Timer: FC<Props> = (props) => {
   } = props;
   const [isFinishAlert1, setFinishAlert1] = useState(false);
   const [isFinishAlert2, setFinishAlert2] = useState(false);
+  const { width } = Dimensions.get("window");
 
   const playSound1 = async () => {
     await audio1?.playAsync();
@@ -50,6 +53,7 @@ export const Timer: FC<Props> = (props) => {
   };
 
   const [finishedDialogVisible, setFinishedDialogVisible] = useState(false);
+  const color = useThemeColor({}, "text");
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + timeLimit * 60);
   const { resume, pause, seconds, minutes, isRunning } = useTimer({
@@ -57,6 +61,16 @@ export const Timer: FC<Props> = (props) => {
     onExpire: () => console.warn("onExpire called"),
     interval: 20,
   });
+
+  const getSize = useCallback(
+    (defualt: number) => {
+      if (width > 390) {
+        return defualt;
+      }
+      return defualt - (390 - width) / 2;
+    },
+    [width],
+  );
 
   useEffect(() => {
     if (alert1 > 0 && timeLimit - alert1 > minutes && !isFinishAlert1) {
@@ -108,8 +122,26 @@ export const Timer: FC<Props> = (props) => {
         </ThemedView>
       ) : null}
       <ThemedView style={{ marginTop: 10 }} />
-      <ThemedText style={styles.munitesTextContent}>{minutes}分</ThemedText>
-      <ThemedText style={styles.secondTextContent}>{seconds}秒</ThemedText>
+      <ThemedView>
+        <CircularProgress
+          value={seconds}
+          maxValue={60}
+          radius={getSize(160)}
+          progressValueColor={"#ecf0f1"}
+          title={`${minutes}分`}
+          titleColor={color}
+          titleStyle={{
+            fontSize: getSize(90),
+            lineHeight: getSize(100),
+            fontWeight: "bold",
+          }}
+          valueSuffix={"秒"}
+          progressValueStyle={{
+            fontSize: getSize(50),
+            lineHeight: getSize(60),
+          }}
+        />
+      </ThemedView>
       <ThemedView style={{ marginTop: 50 }} />
       <Button
         style={{ marginBottom: 30 }}
@@ -174,15 +206,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     lineHeight: 30,
-  },
-  munitesTextContent: {
-    textAlign: "center",
-    fontSize: 100,
-    lineHeight: 110,
-  },
-  secondTextContent: {
-    textAlign: "center",
-    fontSize: 50,
-    lineHeight: 60,
   },
 });

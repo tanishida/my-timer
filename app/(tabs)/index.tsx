@@ -41,6 +41,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.content}>
+      <ThemedView style={{ marginTop: 10 }} />
       {isStarted ? (
         <TimerSetting
           setIsStarted={setIsStarted}
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     top: 5,
     flexDirection: "column",
     justifyContent: "center",
+    overflow: "visible",
   },
   subHeader: {
     backgroundColor: "#2089dc",
