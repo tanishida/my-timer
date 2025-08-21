@@ -28,11 +28,11 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="timer"
         options={{
           title: "タイマー",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="alarm-outline" size={28} color={color} />
+            <Ionicons name="timer" size={28} color={color} />
           ),
         }}
       />

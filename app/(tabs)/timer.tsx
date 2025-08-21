@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CustomSlider } from "@/components/ui/CustomSlider";
 import { TimerSetting } from "@/components/ui/TimerSetting";
 
-export default function HomeScreen() {
+export default function TabOneScreen() {
   const [timeLimit, setTimeLimit] = useState(0);
   const [alert1, setAlert1] = useState(0);
   const [alert2, setAlert2] = useState(0);
@@ -100,6 +100,7 @@ export default function HomeScreen() {
           </Button>
         </ThemedView>
       )}
+      <ThemedView style={{ marginBottom: 10 }} />
     </ThemedView>
   );
 }

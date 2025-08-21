@@ -74,6 +74,7 @@ export default function TabTwoScreen() {
           disabled={count2 <= 0}
         />
       </Card>
+      <ThemedView style={{ marginBottom: 15 }} />
     </ThemedView>
   );
 }

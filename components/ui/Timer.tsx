@@ -3,12 +3,11 @@ import { StyleSheet, Text, Dimensions } from "react-native";
 import { Button, Dialog, Chip } from "@rneui/themed";
 import { ThemedView } from "@/components/ThemedView";
 import { useTimer } from "react-timer-hook";
-import { ThemedText } from "@/components/ThemedText";
 import { Collapsible } from "@/components/Collapsible";
 import { Audio } from "expo-av";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { CircularProgressBase } from 'react-native-circular-progress-indicator';
+import { CircularProgressBase } from "react-native-circular-progress-indicator";
 
 type Props = {
   setIsStarted: (isStarted: boolean) => void;
@@ -87,7 +86,7 @@ export const Timer: FC<Props> = (props) => {
       setFinishAlert1(false);
       setFinishAlert2(false);
     }
-  }, [timeLimit, minutes, seconds, alert1, alert2]);
+  }, [timeLimit, minutes, alert1, alert2, isRunning]);
 
   return (
     <ThemedView>
@@ -124,38 +123,38 @@ export const Timer: FC<Props> = (props) => {
       ) : null}
       <ThemedView style={{ marginTop: 10 }} />
       <ThemedView>
-      <CircularProgressBase
-        value={minutes}
-        maxValue={timeLimit}
-        activeStrokeColor={'#e84118'}
-        radius={getSize(160)}
-      >
-      <CircularProgressBase
-        value={seconds}
-        maxValue={60}
-        activeStrokeColor={'#badc58'}
-        radius={getSize(150)}
-      >
-        <CircularProgress
+        <CircularProgressBase
           value={minutes}
           maxValue={timeLimit}
+          activeStrokeColor={"#e84118"}
           radius={getSize(160)}
-          title={`${seconds}秒`}
-          titleColor={color}
-          titleStyle={{
-            fontSize: getSize(50),
-            lineHeight: getSize(60),
-          }}
-          activeStrokeColor={'#e84118'}
-          valueSuffix={"分"}
-          progressValueColor={color}
-          progressValueStyle={{
-            fontSize: getSize(90),
-            lineHeight: getSize(100),
-          }}
-        />
+        >
+          <CircularProgressBase
+            value={seconds}
+            maxValue={60}
+            activeStrokeColor={"#badc58"}
+            radius={getSize(150)}
+          >
+            <CircularProgress
+              value={minutes}
+              maxValue={timeLimit}
+              radius={getSize(160)}
+              title={`${seconds}秒`}
+              titleColor={color}
+              titleStyle={{
+                fontSize: getSize(50),
+                lineHeight: getSize(60),
+              }}
+              activeStrokeColor={"#e84118"}
+              valueSuffix={"分"}
+              progressValueColor={color}
+              progressValueStyle={{
+                fontSize: getSize(90),
+                lineHeight: getSize(100),
+              }}
+            />
+          </CircularProgressBase>
         </CircularProgressBase>
-      </CircularProgressBase>
       </ThemedView>
       <ThemedView style={{ marginTop: 50 }} />
       <Button
