@@ -7,6 +7,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -42,6 +43,15 @@ export default function TabLayout() {
           title: "ロアカウンター",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons size={28} name="counter" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="editer"
+        options={{
+          title: "対戦の記録",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="edit" color={color} />
           ),
         }}
       />
