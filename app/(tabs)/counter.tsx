@@ -1,13 +1,24 @@
-import React, { FC, useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { Card, Button, Text } from "@rneui/themed";
-import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { CoustomDialog } from "@/components/ui/CustomDialog";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { Button, Card, Text } from "@rneui/themed";
 import * as Haptics from "expo-haptics";
+import React, { useCallback, useState } from "react";
+import { StyleSheet } from "react-native";
 
 export default function TabTwoScreen() {
   const [count, setCount] = useState(0);
   const [count2, setCount2] = useState(0);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const color = useThemeColor({}, "text");
+
+  const onClear = useCallback(() => {
+    setCount(0);
+    setCount2(0);
+    setDialogVisible(false);
+  }, []);
+
   return (
     <ThemedView style={styles.content}>
       <Card containerStyle={styles.cardContent1}>
@@ -39,12 +50,17 @@ export default function TabTwoScreen() {
         />
       </Card>
       <ThemedText
-        style={{
-          transform: "scaleX(-1) scaleY(-1)",
-          fontSize: 20,
-        }}
+        style={styles.textContents2}
       >{`相手：${count2}`}</ThemedText>
-      <ThemedView style={{ marginTop: 120 }} />
+      <ThemedView style={{ marginTop: 40 }} />
+      <Button color={color} onPress={() => {
+        if (count + count2 === 0) return;
+        setDialogVisible(true)
+      }} type="clear">
+        <ThemedText
+        >{"Reset"}</ThemedText>
+      </Button>
+      <ThemedView style={{ marginTop: 40 }} />
       <ThemedText
         style={{ textAlign: "left", fontSize: 20 }}
       >{`相手：${count}`}</ThemedText>
@@ -75,6 +91,14 @@ export default function TabTwoScreen() {
         />
       </Card>
       <ThemedView style={{ marginBottom: 15 }} />
+      <CoustomDialog
+        onPressButton={onClear}
+        dialogVisible={dialogVisible}
+        setDialogVisible={setDialogVisible}
+        buttonTitle="はい"
+        dialogTitle="カウントクリア"
+        dialogText1="カウントをクリアしますか？"
+      />
     </ThemedView>
   );
 }
@@ -92,6 +116,10 @@ const styles = StyleSheet.create({
     fontSize: 40,
     lineHeight: 50,
     textAlign: "center",
+  },
+  textContents2: {
+    transform: "scaleX(-1) scaleY(-1)",
+    fontSize: 20,
   },
   cardContent1: {
     transform: "scaleX(-1) scaleY(-1)",
